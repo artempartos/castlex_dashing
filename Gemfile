@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'dashing'
 gem 'octokit'
-gem 'erubis'
+gem 'httparty'
 
 gem 'therubyracer'
 gem 'haml'
