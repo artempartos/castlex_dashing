@@ -1,0 +1,17 @@
+web:
+  build: .
+  volumes:
+    - .:/app
+    - ~/.bash_history:/root/.bash_history
+  ports:
+    - 8080:8080
+  environment:
+    BUNDLE_PATH: /bundle_cache
+  command: /bin/bash -c 'bundle exec dashing start -p 8080'
+  volumes_from:
+    - bundle_cache
+
+bundle_cache:
+  image: busybox
+  volumes:
+    - /bundle_cache
