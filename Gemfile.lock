@@ -65,6 +65,9 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    racksh (1.0.0)
+      rack (>= 1.0)
+      rack-test (>= 0.5)
     ref (2.0.0)
     rufus-scheduler (2.0.24)
       tzinfo (>= 0.3.22)
@@ -116,6 +119,7 @@ DEPENDENCIES
   httparty
   mechanize
   octokit
+  racksh
   therubyracer
 
 BUNDLED WITH
