@@ -1,0 +1,19 @@
+<h1 class="header" data-bind="header"></h1>
+
+<ul class="list">
+  <li data-foreach-pull="pulls">
+    <p class="title" data-bind="pull.title"></p>
+    <div class="pull_info">
+      <span class="creator" data-bind="pull.user"></span>
+      <span>|</span>
+      <span class="updated_at" data-bind="pull.updated"></span>
+      <span>|</span>
+      <span class='badge' data-bind-class="pull.color">
+        <i data-bind-class="pull.arrow"></i>
+      </span  >
+    </div>
+  </li>
+</ul>
+
+<p class="more-info" data-bind="moreinfo"></p>
+<p class="updated-at" data-bind="updatedAtMessage"></p>

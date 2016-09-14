@@ -3,7 +3,7 @@ require 'bundler'
 Bundler.require
 
 io = HighLine.new
-client = Client.new
+client = WidgetClient.new
 console = CLI::Console.new(io)
 
 console.addCommand('refresh', client.method(:refresh), 'Refresh page')
@@ -15,6 +15,7 @@ console.addHelpCommand('help', 'Help')
 console.addExitCommand('exit', 'Exit from program')
 
 console.addAlias('quit', 'exit')
+console.addAlias('q', 'exit')
 console.addAlias('r', 'refresh')
 console.addAlias('sb', 'boobs')
 console.addAlias('b', 'boobs')

@@ -50,10 +50,10 @@ def get_statuses(servers)
     end
 
     if result == 1
-      arrow = "icon-ok-sign"
+      arrow = "fa fa-check"
       color = "green"
     else
-      arrow = "icon-warning-sign"
+      arrow = "fa fa-clear"
       color = "red"
     end
 

@@ -2,7 +2,7 @@ require 'highline'
 require 'cli-console'
 require 'httparty'
 
-class Client
+class WidgetClient
   private
 
   extend CLI::Task
