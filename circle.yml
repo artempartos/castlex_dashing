@@ -1,0 +1,28 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+  pre:
+    - heroku plugins:install heroku-container-registry:
+        background: true
+  override:
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
+    - docker-compose -f docker-compose.ci.yml build web
+    - mkdir -p ~/docker; docker save castlexdashing_web:latest > ~/docker/image.tar
+    - cat .netrc | sed -e "s/\$HEROKU_LOGIN/$HEROKU_LOGIN/" -e "s/\$HEROKU_PASSWORD/$HEROKU_PASSWORD/" > ~/.netrc
+    - chmod 0600 ~/.netrc
+
+test:
+  override:
+    - exit 0
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - heroku container:login
+      - docker tag castlexdashing_web:latest registry.heroku.com/castlex_dashing/web
+      - docker push registry.heroku.com/castlex_dashing/web
