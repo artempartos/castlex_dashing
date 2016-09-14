@@ -23,7 +23,6 @@ end
 page = 1
 
 SCHEDULER.every '1m', first_in: 0 do |_job|
-  puts "PAGE #{page}"
   girls = wavegirls(page)
 
   if girls.empty?

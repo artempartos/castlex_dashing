@@ -3,6 +3,7 @@ GEM
   specs:
     addressable (2.4.0)
     backports (3.6.8)
+    cli-console (0.1.4)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -27,6 +28,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     haml (4.0.7)
       tilt
+    highline (1.7.8)
     hike (1.2.3)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
@@ -63,9 +65,6 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    racksh (1.0.0)
-      rack (>= 1.0)
-      rack-test (>= 0.5)
     ref (2.0.0)
     rufus-scheduler (2.0.24)
       tzinfo (>= 0.3.22)
@@ -110,13 +109,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cli-console
   dashing
   haml
+  highline
   httparty
   mechanize
-  nokogiri
   octokit
-  racksh
   therubyracer
 
 BUNDLED WITH

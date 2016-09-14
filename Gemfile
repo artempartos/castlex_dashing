@@ -8,4 +8,7 @@ gem 'therubyracer'
 gem 'haml'
 gem 'mechanize'
 
-gem 'racksh'
+group :development do
+  gem 'cli-console'
+  gem 'highline'
+end

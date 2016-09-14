@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+require 'bundler'
+Bundler.require
+
+io = HighLine.new
+client = Client.new
+console = CLI::Console.new(io)
+
+console.addCommand('refresh', client.method(:refresh), 'Refresh page')
+console.addCommand('big_boobs', client.method(:big_boobs), 'Show or hide boobs')
+console.addCommand('boobs', client.method(:boobs), 'Show or hide boobs')
+console.addCommand('no_boobs', client.method(:no_boobs), 'Show or hide boobs')
+
+console.addHelpCommand('help', 'Help')
+console.addExitCommand('exit', 'Exit from program')
+
+console.addAlias('quit', 'exit')
+console.addAlias('r', 'refresh')
+console.addAlias('sb', 'boobs')
+console.addAlias('b', 'boobs')
+console.addAlias('bb', 'big_boobs')
+console.addAlias('nb', 'no_boobs')
+
+console.start("%s> ",['castlex-dashing client'])
