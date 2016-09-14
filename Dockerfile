@@ -22,4 +22,4 @@ ADD . /app
 ENV PORT 8080
 EXPOSE 8080
 
-CMD bundle exec dashing start -p 8080
+CMD bundle exec dashing start -p $PORT
