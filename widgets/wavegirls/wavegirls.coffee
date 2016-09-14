@@ -4,9 +4,7 @@ class Dashing.Wavegirls extends Dashing.Widget
     @preloadGirls()
     @currentIndex = 0
     @dashes = []
-    # @mode = 'default'
-    # @mode = 'fullscreen'
-    @mode = 'widgets'
+    @mode = 'default'
 
     @load_dashes()
     setTimeout(@load_dashes, 3000)
