@@ -6,3 +6,6 @@ gem 'httparty'
 
 gem 'therubyracer'
 gem 'haml'
+gem 'mechanize'
+
+gem 'racksh'

@@ -43,7 +43,7 @@ def build_data(project, auth_token)
   api_url = api_url % [project[:user], project[:repo], project[:branch], auth_token]
   api_response =  HTTParty.get(api_url, :headers => { "Accept" => "application/json" } )
   api_json = JSON.parse(api_response.body)
-  return {} if api_json.empty?
+  return {} if api_json.empty? || api_json['message'] == 'Project not found'
 
   latest_build = api_json.select{ |build| build['status'] != 'queued' }.first
   email_hash = Digest::MD5.hexdigest(latest_build['committer_email'])
