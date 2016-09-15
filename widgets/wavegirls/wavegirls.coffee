@@ -70,11 +70,12 @@ class Dashing.Wavegirls extends Dashing.Widget
   preloadGirls: ->
     @preloadGirlsArray = []
     @loadedGirlsArray = []
-    for girlUrl in @get('wavegirls')
-      @preloadGirlsArray.push(
-        $(new Image()).attr({'src': girlUrl}).one("load", $.proxy(@fryGirl, @)).each ->
-          $(this).load() if @complete
-      )
+    if @get('wavegirls')
+      for girlUrl in @get('wavegirls')
+        @preloadGirlsArray.push(
+          $(new Image()).attr({'src': girlUrl}).one("load", $.proxy(@fryGirl, @)).each ->
+            $(this).load() if @complete
+        )
 
   onData: (data) ->
     if data.wavegirls
