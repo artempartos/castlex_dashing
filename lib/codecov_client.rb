@@ -11,8 +11,8 @@ class CodecovClient
 
   public
 
-  def pull_requests(owner, repo)
-    response = self.class.get("/#{owner}/#{repo}/pulls?access_token=#{@options[:access_token]}")
+  def commit(organization, repo, sha)
+    response = self.class.get("/#{organization}/#{repo}/commits/#{sha}?access_token=#{@options[:access_token]}")
     response.parsed_response
   end
 end

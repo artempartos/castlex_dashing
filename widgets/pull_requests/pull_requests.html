@@ -2,9 +2,14 @@
 
 <ul class="list">
   <li data-foreach-pull="pulls">
-    <p class="title" data-bind="pull.title"></p>
     <div class="pull_info">
+      <span class="number" data-bind="pull.number"></span>
+      <span>|</span>
+      <span class="coverage" data-bind="pull.coverage"></span>
+      <span>|</span>
       <span class="creator" data-bind="pull.user"></span>
+      <span>|</span>
+      <span class="title" data-bind="pull.title"></span>
       <span>|</span>
       <span class="updated_at" data-bind="pull.updated"></span>
       <span>|</span>

@@ -1,6 +1,8 @@
 require 'httparty'
 require 'digest/md5'
 
+CODECOV_CLIENT = CodecovClient.new
+
 projects = [
   { user: 'tundreus', repo: 'learn_trials', branch: 'master' },
   { user: 'tundreus', repo: 'learn_trials', branch: 'develop' },
@@ -46,8 +48,12 @@ def build_data(project, auth_token)
   return {} if api_json.empty?
 
   latest_build = api_json.select{ |build| build['status'] != 'queued' }.first
-  email_hash = Digest::MD5.hexdigest(latest_build['committer_email'])
+  email_hash = Digest::MD5.hexdigest(latest_build['author_email'])
   build_id = "#{latest_build['branch']}, build ##{latest_build['build_num']}"
+
+  sha = latest_build['vcs_revision']
+  commit = CODECOV_CLIENT.commit(project[:user], project[:repo], sha)
+  coverage = commit['error'].nil? ? commit['commit']['totals']['c'].to_f.round(2) : 0.0
 
   data = {
     build_id: build_id,
@@ -56,9 +62,10 @@ def build_data(project, auth_token)
     time: "#{calculate_time(latest_build['stop_time'])}",
     state: "#{latest_build['status'].capitalize}",
     widget_class: "#{translate_status_to_class(latest_build['status'])}",
-    committer_name: latest_build['committer_name'],
-    commit_body: "\"#{latest_build['body']}\"",
-    avatar_url: "http://www.gravatar.com/avatar/#{email_hash}"
+    committer_name: latest_build['author_name'],
+    commit_body: "\"#{latest_build['subject']}\"",
+    avatar_url: "http://www.gravatar.com/avatar/#{email_hash}",
+    coverage: coverage
   }
   return data
 end
