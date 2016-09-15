@@ -53,7 +53,7 @@ def get_statuses(servers)
       arrow = "fa fa-check"
       color = "green"
     else
-      arrow = "fa fa-clear"
+      arrow = "fa fa-close"
       color = "red"
     end
 

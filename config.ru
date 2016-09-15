@@ -11,6 +11,19 @@ configure do
   end
 end
 
+
+class Object
+  alias_method :super_send_event, :send_event
+
+  def send_event(id, body, target=nil)
+    case id
+    when 'wavegirls'
+      Wavegirls.mode = body['mode'] if body['mode']
+    end
+    super_send_event(id, body, target)
+  end
+end
+
 map Sinatra::Application.assets_prefix do
   run Sinatra::Application.sprockets
 end
