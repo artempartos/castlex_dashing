@@ -6,7 +6,7 @@ CODECOV_CLIENT = CodecovClient.new
 projects = [
   { user: 'tundreus', repo: 'learn_trials', branch: 'master' },
   { user: 'tundreus', repo: 'learn_trials', branch: 'develop' },
-  { user: 'tundreus', repo: 'learn_trials', branch: 'qa' },
+  { user: 'tundreus', repo: 'learn_trials', branch: 'staging' },
 ]
 
 def duration(time)
