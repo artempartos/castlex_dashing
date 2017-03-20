@@ -1,11 +1,14 @@
 require 'mechanize'
-require 'nokogiri'
+require 'json'
 
-url = 'http://quote.rbc.ru/exchanges/demo/selt.0/USD000000TOD/intraday'
+url = 'https://quote.rbc.ru/data/simple/delay/ticker/selt.0/59109'
 agent = Mechanize.new
 
 SCHEDULER.every '3m', first_in: 0  do
-  html = agent.get(url)
-  currency = html.body.match(/last\\u0022:(\d+\.\d+)/)[1]
+  currency = ''
+  response = agent.get(url)
+  parsed_json = JSON.parse(response.body)
+  data = parsed_json.dig('result', 'data')
+  currency = data[0][7] if data
   send_event('currency', currency: currency)
 end
