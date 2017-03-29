@@ -8,31 +8,32 @@ repo = 'learn_trials'
 
 SCHEDULER.every '5m', first_in: 0 do |job|
   pulls = get_pull_requests(organization, repo)
-  send_event('pr_widget', { header: "Open Pull Requests", pulls: pulls })
+  attrs = { header: "Open Pull Requests", pulls: pulls, number: pulls.count }
+  send_event('pr_widget', attrs)
 end
 
-def get_label(pass)
+def get_class(pass)
   case pass
   when 'success'
-    return 'badge green', 'fa fa-check'
+    return 'green fa fa-circle'
   when 'failure'
-    return 'badge red', 'fa fa-close'
+    return 'red fa fa-circle'
   else
-    return 'badge else', 'fa fa-question'
+    return 'else fa fa-circle'
   end
 end
 
 
 def get_pull_requests(organization, repo)
   pull_requests = GITHUB_CLIENT.pull_requests("#{organization}/#{repo}", state: 'open')
-  pull_requests.map { |pr| format_pull_request(organization, repo, pr) }.compact.first(5)
+  pull_requests.map { |pr| format_pull_request(organization, repo, pr) }.compact
 end
 
 def format_pull_request(organization, repo, pr)
   begin
     commit = CODECOV_CLIENT.commit(organization, repo, pr.head.sha)
     passed = GITHUB_CLIENT.combined_status('tundreus/learn_trials', pr.head.sha).state
-    color, arrow = get_label(passed)
+    classes = get_class(passed)
 
     coverage = commit['error'].nil? ? commit['commit']['totals']['c'].to_f.round(2) : nil
     updated = pr.updated_at.strftime("%b %-d %Y, %l:%m %p")
@@ -43,8 +44,7 @@ def format_pull_request(organization, repo, pr)
       number: "##{pr.number}",
       title: pr.title,
       coverage: "#{coverage}%",
-      color: color,
-      arrow: arrow
+      classes: classes
     }
   rescue => e
     puts e.message
