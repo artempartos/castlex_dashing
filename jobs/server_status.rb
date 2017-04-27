@@ -11,14 +11,18 @@ require 'uri'
 # method: either 'http' or 'ping'
 # if the server you're checking redirects (from http to https for example) the check will
 # return false
-
-servers = [
-  {name: 'production', url: 'https://app.learntrials.com', method: 'http'},
-  {name: 'sandbox', url: 'https://sandbox.learntrials.com/', method: 'http'},
-  {name: 'staging', url: 'https://staging.learntrials.com/', method: 'http'},
-  {name: 'qa', url: 'http://qa.learntrials.com/', method: 'http'},
-  {name: 'qa2', url: 'http://qa2.learntrials.com/', method: 'http'}
-]
+projects = {
+  learntrials: [
+    {name: 'production', url: 'https://app.learntrials.com', method: 'http'},
+    {name: 'sandbox', url: 'https://sandbox.learntrials.com/', method: 'http'},
+    {name: 'staging', url: 'https://staging.learntrials.com/', method: 'http'},
+    {name: 'qa', url: 'http://qa.learntrials.com/', method: 'http'},
+    {name: 'qa2', url: 'http://qa2.learntrials.com/', method: 'http'}
+  ],
+  briteverify: [
+    {name: 'bvshopify: staging', url: 'https://bvshopify.herokuapp.com/', method: 'http'},
+  ]
+}
 
 def get_statuses(servers)
 	success_statuses = %W[200, 201, 202, 301, 302]
@@ -63,6 +67,9 @@ def get_statuses(servers)
 end
 
 SCHEDULER.every '300s', :first_in => 0 do |job|
-  statuses = get_statuses(servers)
-  send_event('server_status', {items: statuses})
+  projects.keys.each do |project|
+    servers = projects[project]
+    statuses = get_statuses(servers)
+    send_event("server_status-#{project}", {items: statuses})
+  end
 end

@@ -2,6 +2,7 @@ require 'dashing'
 
 configure do
   set :auth_token, 'YOUR_AUTH_TOKEN'
+  set :default_dashboard, 'briteverify'
 
   helpers do
     def protected!
@@ -10,7 +11,6 @@ configure do
     end
   end
 end
-
 
 class Object
   alias_method :super_send_event, :send_event

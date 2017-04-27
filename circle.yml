@@ -25,6 +25,5 @@ deployment:
   master:
     branch: master
     commands:
-      - heroku container:login
-      - docker tag castlexdashing_web:latest registry.heroku.com/castlex-dashing/web
-      - docker push registry.heroku.com/castlex-dashing/web
+      - docker login --username=_ --password=$HEROKU_PASSWORD --email=$HEROKU_LOGIN registry.heroku.com
+      - heroku container:push web --app castlex-dashing
