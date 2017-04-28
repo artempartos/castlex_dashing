@@ -67,10 +67,6 @@ def build_data(project, auth_token)
     coverage = commit['commit']['totals']['c'].to_f.round(2) if commit['error'].nil?
   end
 
-  puts project
-  puts coverage
-  puts "#{branch}, build ##{build_id}"
-
   data = {
     build_id: "#{branch}, build ##{build_id}",
     repo: "#{project[:repo]}",
