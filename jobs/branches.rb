@@ -1,12 +1,15 @@
 require 'httparty'
 require 'digest/md5'
 
-CODECOV_CLIENT = CodecovClient.new
-
-projects = [
+learntrials = [
   { user: 'tundreus', repo: 'learn_trials', branch: 'master' },
   { user: 'tundreus', repo: 'learn_trials', branch: 'develop' },
   { user: 'tundreus', repo: 'learn_trials', branch: 'staging' },
+]
+
+briteverify = [
+  { user: 'britecontact', repo: 'shopify-poc', branch: 'master' },
+  { user: 'britecontact', repo: 'shopify-poc', branch: 'develop' },
 ]
 
 def duration(time)
@@ -41,22 +44,35 @@ def translate_status_to_class(status)
 end
 
 def build_data(project, auth_token)
-  api_url = 'https://circleci.com/api/v1/project/%s/%s/tree/%s?circle-token=%s'
-  api_url = api_url % [project[:user], project[:repo], project[:branch], auth_token]
-  api_response =  HTTParty.get(api_url, :headers => { "Accept" => "application/json" } )
-  api_json = JSON.parse(api_response.body)
-  return {} if api_json.empty?
+  api_url = 'https://circleci.com/api/v1/project/%s/%s/tree/%s?circle-token=%s' % [project[:user], project[:repo], project[:branch], auth_token]
+  response = make_request(api_url)
 
-  latest_build = api_json.select{ |build| build['status'] != 'queued' }.first
+  latest_build = response.select{ |build| build['status'] != 'queued' }.first
   email_hash = Digest::MD5.hexdigest(latest_build['author_email'])
-  build_id = "#{latest_build['branch']}, build ##{latest_build['build_num']}"
+  branch = latest_build['branch']
+  build_id = latest_build['build_num']
 
-  sha = latest_build['vcs_revision']
-  commit = CODECOV_CLIENT.commit(project[:user], project[:repo], sha)
-  coverage = commit['error'].nil? ? commit['commit']['totals']['c'].to_f.round(2) : 0.0
+  api_url = 'https://circleci.com/api/v1/project/%s/%s/%s/artifacts?circle-token=%s' % [project[:user], project[:repo], build_id, auth_token]
+  artefacts = make_request(api_url)
+  artefact = artefacts.find {|a| a['pretty_path'] =~ /.last_run.json/}
+  coverage = 0.00
+
+  if artefact
+    coverage_url = "#{artefact['url']}?circle-token=#{auth_token}"
+    coverage_json = make_request(coverage_url)
+    coverage = coverage_json['result']['covered_percent'] if coverage_json
+  else
+    sha = latest_build['vcs_revision']
+    commit = CODECOV_CLIENT.commit(project[:user], project[:repo], sha)
+    coverage = commit['commit']['totals']['c'].to_f.round(2) if commit['error'].nil?
+  end
+
+  puts project
+  puts coverage
+  puts "#{branch}, build ##{build_id}"
 
   data = {
-    build_id: build_id,
+    build_id: "#{branch}, build ##{build_id}",
     repo: "#{project[:repo]}",
     branch: "#{latest_build['branch']}",
     time: "#{calculate_time(latest_build['stop_time'])}",
@@ -70,10 +86,22 @@ def build_data(project, auth_token)
   return data
 end
 
-SCHEDULER.every '10s', :first_in => 0  do
-  projects.each do |project|
+def make_request(url)
+  api_response =  HTTParty.get(url, :headers => { "Accept" => "application/json" } )
+  api_json = JSON.parse(api_response.body)
+  api_json.empty? ? {} : api_json
+end
+
+SCHEDULER.every '20s', :first_in => 0  do
+  learntrials.each do |project|
     data_id = "circle-ci-#{project[:user]}-#{project[:repo]}-#{project[:branch]}"
     data = build_data(project, ENV['CIRCLE_CI_AUTH_TOKEN'])
+    send_event(data_id, data) unless data.empty?
+  end
+
+  briteverify.each do |project|
+    data_id = "circle-ci-#{project[:user]}-#{project[:repo]}-#{project[:branch]}"
+    data = build_data(project, ENV['CIRCLE_CI_AUTH_TOKEN_2'])
     send_event(data_id, data) unless data.empty?
   end
 end
