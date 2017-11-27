@@ -1,7 +1,7 @@
 require 'net/http'
 require 'json'
 
-WAVEGIRLS_URI = URI.parse('http://girlstream.ru/')
+WAVEGIRLS_URI = URI.parse('http://rails.gusar.1cb9d70e.svc.dockerapp.io/api/images/random')
 
 class Wavegirls
   class << self
@@ -9,35 +9,19 @@ class Wavegirls
   end
 end
 
-Wavegirls.mode = 'default'
+# Wavegirls.mode = 'default'
+Wavegirls.mode = 'party'
 
-def wavegirls_json(page)
-  uri = WAVEGIRLS_URI.dup
-  uri.path = '/api/photos'
-  uri.query = "page=#{page}"
-  response = Net::HTTP.get(uri)
-  JSON.parse(response)
-end
-
-def wavegirls(page)
-  json = wavegirls_json(page)
-  json.map do |girl|
-    uri = WAVEGIRLS_URI.dup
-    uri.path = girl['image']['url']
-    uri
+def wavegirls
+  arr = []
+  20.times do
+    response = Net::HTTP.get(WAVEGIRLS_URI)
+    arr.push(JSON.parse(response)['picture_url'])
   end
+  arr
 end
-
-page = 1
 
 SCHEDULER.every '1m', first_in: 0 do |_job|
-  girls = wavegirls(page)
-
-  if girls.empty?
-    page = 1
-    girls = wavegirls(page)
-  end
-
-  send_event('wavegirls', page: page, wavegirls: girls, mode: Wavegirls.mode)
-  page += 1
+  girls = wavegirls
+  send_event('wavegirls', wavegirls: girls, mode: Wavegirls.mode)
 end
