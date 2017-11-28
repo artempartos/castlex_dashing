@@ -17,6 +17,14 @@
     %li(data-col=1 data-row=1 data-sizex=1 data-sizey=1)
       %div(data-view="ServerStatus" data-id="server_status-briteverify" data-title="Server Status")
     %li(data-col=1 data-row=1 data-sizex=2 data-sizey=1)
-      %div(data-view="Currency" data-id="currency" data-title="USD/RUB")
+      %div(data-view="Currency" data-id='usd_rub' data-title="USD/RUB")
     %li(data-col=1 data-row=1 data-sizex=1 data-sizey=1)
       %div(data-view="PullRequests" data-title='Pull requests in britecontact/shopify-poc' data-id="pr_widget-briteverify")
+
+:javascript
+  var w = $(window)   // returns height of browser viewport
+  var margin = 5
+  Dashing.numColumns = 4
+  Dashing.numRows = 2
+  Dashing.widget_margins = [margin, margin]
+  Dashing.widget_base_dimensions = [(w.width() - (margin * Dashing.numColumns * 2)) / Dashing.numColumns, (w.height() - (margin * Dashing.numRows * 2)) / Dashing.numRows]
