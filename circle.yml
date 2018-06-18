@@ -8,7 +8,7 @@ dependencies:
   cache_directories:
     - "~/docker"
   pre:
-    - heroku plugins:install heroku-container-registry:
+    - heroku plugins:install @heroku-cli/plugin-container-registry:
         background: true
   override:
     - if [[ -e ~/docker/image.tar ]]; then docker load < ~/docker/image.tar; fi
