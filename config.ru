@@ -2,7 +2,7 @@ require 'dashing'
 
 configure do
   set :auth_token, 'YOUR_AUTH_TOKEN'
-  set :default_dashboard, 'briteverify'
+  set :default_dashboard, 'learntrials'
 
   helpers do
     def protected!
