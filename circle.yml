@@ -1,5 +1,6 @@
 machine:
   pre:
+    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   services:
     - docker
