@@ -27,3 +27,4 @@ deployment:
     commands:
       - docker login --username=_ --password=$HEROKU_PASSWORD --email=$HEROKU_LOGIN registry.heroku.com
       - heroku container:push web --app castlex-dashing
+      - heroku container:release web --app castlex-dashing

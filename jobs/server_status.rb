@@ -17,11 +17,7 @@ projects = {
     {name: 'sandbox', url: 'https://sandbox.learntrials.com/', method: 'http'},
     {name: 'staging', url: 'https://staging.learntrials.com/', method: 'http'},
     {name: 'qa', url: 'http://qa.learntrials.com/', method: 'http'},
-    {name: 'qa2', url: 'http://qa2.learntrials.com/', method: 'http'}
   ],
-  briteverify: [
-    {name: 'bvshopify: staging', url: 'https://bvshopify.herokuapp.com/', method: 'http'},
-  ]
 }
 
 def get_statuses(servers)
